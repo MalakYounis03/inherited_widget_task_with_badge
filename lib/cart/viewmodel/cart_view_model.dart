@@ -15,7 +15,6 @@ class CartScope extends ValueNotifier<Map<String, CartItem>> {
     notifyListeners();
   }
 
-  /// زيادة العدد في شاشة السلة
   void increment(String productId) {
     final item = value[productId];
     if (item == null) return;
@@ -23,7 +22,6 @@ class CartScope extends ValueNotifier<Map<String, CartItem>> {
     notifyListeners();
   }
 
-  /// إنقاص العدد (ولو وصل 0 ينحذف من السلة)
   void decrement(String productId) {
     final item = value[productId];
     if (item == null) return;
@@ -36,9 +34,6 @@ class CartScope extends ValueNotifier<Map<String, CartItem>> {
     notifyListeners();
   }
 
-  bool get isEmpty => value.isEmpty;
-
-  /// عناصر السلة كـ List مرتبة (لو تحتاجها بالعرض)
   List<CartItem> get items => value.values.toList(growable: false);
 
   int get totalQuantity =>
