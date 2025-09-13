@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:inherited_widget_task2/app_services/cart_provider.dart';
 import 'package:inherited_widget_task2/cart/view/cart_view.dart';
-import 'package:inherited_widget_task2/cart/viewmodel/cart_provider.dart';
 import 'package:inherited_widget_task2/products/model/products_model.dart';
 
 class ProductsView extends StatefulWidget {
@@ -14,62 +14,55 @@ class _ProductsViewState extends State<ProductsView> {
   @override
   Widget build(BuildContext context) {
     final cart = CartProvider.of(context);
-
     final items = List.generate(4, (i) => 'Product ${i + 1}');
+    final badge = cart.totalquantity();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Title'),
         actions: [
-          ValueListenableBuilder(
-            valueListenable: cart!,
-            builder: (context, value, child) {
-              final count = cart.totalQuantity;
+          Stack(
+            clipBehavior: Clip.none,
 
-              return Stack(
-                clipBehavior: Clip.none,
-
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.ios_share_rounded),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CartView()),
-                      );
-                    },
-                  ),
-                  if (count > 0)
-                    Positioned(
-                      right: 6,
-                      top: 6,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 18,
-                          minHeight: 18,
-                        ),
-                        child: Text(
-                          '$count',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+            children: [
+              IconButton(
+                icon: Icon(Icons.ios_share_rounded),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CartView()),
+                  );
+                },
+              ),
+              if (cart.items.isNotEmpty)
+                Positioned(
+                  right: 6,
+                  top: 6,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 18,
+                      minHeight: 18,
+                    ),
+                    child: Text(
+                      '$badge',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                ],
-              );
-            },
+                  ),
+                ),
+            ],
           ),
           SizedBox(width: 8),
         ],
@@ -119,6 +112,7 @@ class _ProductsViewState extends State<ProductsView> {
                     TextButton(
                       onPressed: () =>
                           cart.add(Product(id: '$index', name: items[index])),
+
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
